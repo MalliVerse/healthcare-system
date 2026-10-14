@@ -6,6 +6,7 @@ from datetime import datetime, time # Import time
 # Use zoneinfo for modern timezone handling (requires Python 3.9+)
 # If using older Python, you might need 'pytz'
 from zoneinfo import ZoneInfo
+from app.notifications.email_service import build_appointment_info, notify_appointment
 
 # Define the local timezone (adjust if your server/target timezone is different)
 LOCAL_TIMEZONE = ZoneInfo("Asia/Kolkata")
@@ -100,6 +101,8 @@ def book_appointment(current_user, data):
         db.session.add(new_appointment)
         db.session.commit()
 
+        notify_appointment("booked", build_appointment_info(new_appointment))
+
         return jsonify({
             "message": "Appointment booked successfully",
             "appointment_id": new_appointment.id
@@ -151,6 +154,8 @@ def update_appointment_status(current_user, appointment_id, data):
         appointment.status = new_status
         db.session.commit()
 
+        notify_appointment("status_changed", build_appointment_info(appointment))
+
         return jsonify({
             "message": "Appointment status updated successfully",
             "appointment": _serialize_appointment(appointment)
@@ -179,8 +184,13 @@ def cancel_appointment(current_user, appointment_id):
              return jsonify({"error": f"Cannot cancel an appointment that is already {appointment.status}."}), 400
 
 
+        info = build_appointment_info(appointment)
+        info["status"] = "Cancelled"
+
         db.session.delete(appointment)
         db.session.commit()
+
+        notify_appointment("cancelled_by_patient", info)
 
         return jsonify({"message": f"Appointment with ID {appointment_id} has been successfully cancelled."}), 200
 

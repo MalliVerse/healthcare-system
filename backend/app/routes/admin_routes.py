@@ -8,6 +8,7 @@ from email_validator import validate_email, EmailNotValidError
 
 from app.models import User, EHR, Appointment, Medication
 from app.extensions import db
+from app.notifications.email_service import build_appointment_info, notify_appointment
 
 admin_routes = Blueprint('admin_routes', __name__)
 
@@ -296,6 +297,7 @@ def update_appointment(appt_id):
             return jsonify({"error": "Invalid appointment_time"}), 400
 
     db.session.commit()
+    notify_appointment("updated_by_admin", build_appointment_info(appt))
     return jsonify(_appointment_to_dict(appt)), 200
 
 
@@ -308,8 +310,10 @@ def delete_appointment(appt_id):
     appt = Appointment.query.get(appt_id)
     if not appt:
         return jsonify({"error": "Appointment not found"}), 404
+    info = build_appointment_info(appt)
     db.session.delete(appt)
     db.session.commit()
+    notify_appointment("deleted_by_admin", info)
     return jsonify({"message": "Appointment deleted successfully"}), 200
 
 

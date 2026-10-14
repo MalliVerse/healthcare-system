@@ -6,4 +6,5 @@ Flask-SQLAlchemy
 flask-marshmallow
 qrcode
 qrcode[pil]
-email_validator
+email_validatorpython-dotenv==1.1.1
+tzdata==2024.1
