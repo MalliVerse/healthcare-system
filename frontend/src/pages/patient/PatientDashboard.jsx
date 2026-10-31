@@ -15,13 +15,10 @@ const Sidebar = ({ onAppointmentsClick, onHealthRecordClick, onMedicationsClick 
       <button onClick={onHealthRecordClick} className="w-full text-left text-gray-400 hover:bg-slate-700 hover:text-white px-4 py-2 rounded-lg transition-colors duration-200">Health Record</button>
       <button onClick={onMedicationsClick} className="w-full text-left text-gray-400 hover:bg-slate-700 hover:text-white px-4 py-2 rounded-lg transition-colors duration-200">Medications</button>
     </nav>
-    <div className="mt-auto">
-      <button className="w-full bg-red-600 text-white p-3 rounded-lg font-bold hover:bg-red-700 active:bg-red-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400">
-        <span>Emergency</span>
-        <span className="block text-xl font-normal">100</span>
-      </button>
-    </div>
+  
+
   </div>
+
 );
 
 const StatCard = ({ title, value, icon }) => (
@@ -187,6 +184,8 @@ const AppointmentBookingModal = ({ onClose, onBookingSuccess }) => {
                 filterDate={isAvailableDay}
                 includeTimes={getAvailableTimes(selectedDateTime || new Date())}
                 showTimeSelect
+                                minDate={new Date()}
+                filterTime={(time) => new Date().getTime() < time.getTime()}
                 // Use 12-hour format for the picker
                 dateFormat="MMMM d, yyyy h:mm aa"
                 placeholderText="Click to select date and time"

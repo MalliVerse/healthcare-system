@@ -2,7 +2,7 @@ import json
 from flask import request, jsonify
 from app.models import Appointment, User
 from app.extensions import db
-from datetime import datetime, time # Import time
+from datetime import datetime, time, timezone
 # Use zoneinfo for modern timezone handling (requires Python 3.9+)
 # If using older Python, you might need 'pytz'
 from zoneinfo import ZoneInfo
@@ -61,6 +61,14 @@ def book_appointment(current_user, data):
         except (ValueError, TypeError) as e:
             print(f"Datetime parsing error: {e}")
             return jsonify({"error": "Invalid datetime format received from frontend."}), 400
+
+        #Reject past dates and time
+                # --- Reject past dates and times ---
+        now_utc = datetime.now(timezone.utc)
+        if appointment_time_utc.tzinfo is None:
+            appointment_time_utc = appointment_time_utc.replace(tzinfo=timezone.utc)
+        if appointment_time_utc <= now_utc:
+            return jsonify({"error": "Cannot book an appointment in the past."}), 400
 
         # --- Timezone Conversion and Comparison ---
         # Convert the UTC appointment time to the local timezone
