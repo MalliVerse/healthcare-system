@@ -3,9 +3,9 @@
 - 📌 [Backend Setup & API Guide](./Backend.md)
 - 🎨 Frontend (Coming soon...)
 
-# 🏥 Secure and scalable Healthcare System
+# 🏥 Secure and Scalable Healthcare System
 
-A cloud-based electronic health record (EHR) management system built to improve healthcare delivery, especially in rural areas. This full-stack project ensures scalability, security, and usability across patient, doctor, and admin interfaces.
+An electronic health record (EHR) management system built to improve healthcare delivery. This full-stack project ensures scalability, security, and usability across patient, doctor, and admin interfaces.
 
 ---
 
